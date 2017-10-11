@@ -53,5 +53,12 @@ h1 {
 form {
 
 	padding: 20px;
+	text-align: center;
+
+}
+
+#response {
+
+	height: 75px;
 
 }

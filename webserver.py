@@ -4,7 +4,9 @@ webserver.py
 File that is the central location of code for your webserver.
 """
 
-from flask import Flask, render_template
+from flask import Flask, request, render_template
+import os
+import requests
 
 # Create application, and point static path (where static resources like images, css, and js files are stored) to the
 # "static folder"
@@ -65,4 +67,34 @@ def fourth_blog():
 @app.route('/blog/what-productivity-systems-wont-solve')
 def fifth_blog():
 
-    return render_template("blog/Post5.html")                                
+    return render_template("blog/Post5.html")   
+
+
+@app.route('/contact/submit', methods=['POST'])
+def send_email():
+    name = request.form.get("name")
+    subject = request.form.get("subject")
+    message = request.form.get("message")
+    response = request.form.get("response")
+
+    if ((name == "") or (subject == "") or (message == "")):
+        return render_template("contact_us.html", response=response)
+    else:
+        data = {
+
+            'from': name + "<" +  os.environ["INFO253_MAILGUN_FROM_EMAIL"] + ">",
+            'to': os.environ["INFO253_MAILGUN_TO_EMAIL"],
+            'subject': subject,
+            'text': message
+
+        }
+        auth = (os.environ["INFO253_MAILGUN_USER"], os.environ["INFO253_MAILGUN_PASSWORD"])
+        req = requests.post('https://api.mailgun.net/v3/' + os.environ["INFO253_MAILGUN_DOMAIN"] + '/messages', auth=auth, data=data)
+        if (req.status_code == requests.codes.ok):
+            return render_template("contact_us.html", response="Hi " + name + ", your message was sent")
+        else:
+            return render_template("contact_us.html", response="Sorry " + name + ", your message was not sent")
+
+
+
+
