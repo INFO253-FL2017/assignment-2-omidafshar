@@ -27,7 +27,7 @@ Flask is a microframework that allows us to control the server's responses to GE
 
 HTTP is the protocol that the browser and server use to send data to each other.
 
-### GET and POST Requests
+#### GET and POST Requests
 
 GET and POST requests are the specific requests that send data between the browser and the server. GET requests are sent to the server every time a new page is to be loaded, and a POST request is sent upon submission of the form in the Contact Us page.
 
